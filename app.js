@@ -16,7 +16,7 @@ app.use(bodyParser.json());
 app.all('/*', (req, res, next) => {
     console.log(`--- ${new Date()} ---`);
     console.log(`[Request Body] ${JSON.stringify(req.body || {})}`);
-    console.log(`[Request Header] ${req.headers}`);
+    console.log(`[Request Header] ${JSON.stringify(req.headers)}`);
     console.log(`[Request Method] ${req.method}`);
     next();
 })
