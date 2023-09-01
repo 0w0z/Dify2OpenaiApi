@@ -64,7 +64,8 @@ app.post('/v1/chat/completions', async (req, res) => {
                 'conversation_id': '',
                 'user': 'apiuser'
             },
-            responseType: 'stream'
+            responseType: 'stream',
+            decompress: false
         });
         console.log('Start streaming...');
         response.data.pipe(res);
