@@ -23,7 +23,7 @@ app.all('/*', (req, res, next) => {
 
 
 app.post('/v1/chat/completions', async (req, res) => {
-    const authHeader = req.headers['Authorization'];
+    const authHeader = req.headers['authorization'] || req.headers['Authorization'];
     const jsonFunc = res.json;
     res.json = (d) => {
         console.log(`[Return Json] ${JSON.stringify(d)}`);
