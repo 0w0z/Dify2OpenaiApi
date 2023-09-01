@@ -55,7 +55,7 @@ app.post('/v1/chat/completions', async (req, res) => {
             url: process.env.DIFY_API_URL + '/chat-messages',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
+                'Authorization': `Bearer ${authHeader.split(' ')[1]}`
             },
             data: {
                 'inputs': {},
