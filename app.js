@@ -13,8 +13,22 @@ const app = express();
 app.use(bodyParser.json());
 
 
+app.all('/*', (req, res, next) => {
+    console.log(`--- ${new Date()} ---`);
+    console.log(`[Request Body] ${JSON.stringify(req.body || {})}`);
+    console.log(`[Request Header] ${req.headers}`);
+    console.log(`[Request Method] ${req.method}`);
+    next();
+})
+
+
 app.post('/v1/chat/completions', async (req, res) => {
     const authHeader = req.headers['Authorization'];
+    const jsonFunc = res.json;
+    res.json = (d) => {
+        console.log(`[Return Json] ${JSON.stringify(d)}`);
+        jsonFunc(d);
+    }
     if (!authHeader) {
         return res.status(401).json({
             code: 401,
@@ -51,6 +65,7 @@ app.post('/v1/chat/completions', async (req, res) => {
                 'user': 'apiuser'
             }
         });
+        console.log('Start streaming...');
         response.data.pipe(res);
     } catch (err) {
         console.log(err);
