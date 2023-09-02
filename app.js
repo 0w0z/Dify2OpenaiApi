@@ -96,7 +96,8 @@ app.post('/v1/chat/completions', async (req, res) => {
             res.write(chunk);
         })
         stream.on('end', () => {
-            res.write('[DONE]');
+            console.log('end event detected...')
+            res.write('[DONE]'); // doesn't work!
             res.end();
         })
     } catch (err) {
