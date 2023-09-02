@@ -93,12 +93,7 @@ app.post('/v1/chat/completions', async (req, res) => {
         const stream = resp.body;
         stream.on('data', (chunk) => {
             console.log(`Received chunk: ${chunk}`);
-            try {
-                const chunkObj = JSON.parse(chunk.toString().split("data: ")[1]); // use toString() !!!
-            } catch (err) {
-                console.log(err); // calm down, it's ok...
-                return;
-            }
+            if(!chunk.toString().startsWith('data:')) return;
             const chunkObj = JSON.parse(chunk.toString().split("data: ")[1]);
             if (chunkObj.event != 'message') {
                 console.log('Not a message, skip.');
