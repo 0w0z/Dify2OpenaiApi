@@ -50,7 +50,7 @@ app.post('/v1/chat/completions', async (req, res) => {
         // 暂不支持连续对话 直接提取最后一句
         const data = req.body;
         const queryString = data.messages[data.messages.length-1].content;
-        const response = await axios({
+        const response = axios({
             method: 'POST',
             url: process.env.DIFY_API_URL + '/chat-messages',
             headers: {
