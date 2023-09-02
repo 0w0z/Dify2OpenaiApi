@@ -82,6 +82,7 @@ app.post('/v1/chat/completions', async (req, res) => {
                 'user': 'apiuser'
             })
         });
+        res.setHeader('Content-Type', 'text/event-stream');
         resp.body.pipe(res);
     } catch (err) {
         console.log(err);
