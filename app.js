@@ -93,7 +93,7 @@ app.post('/v1/chat/completions', async (req, res) => {
         const stream = resp.body;
         stream.on('data', (chunk) => {
             console.log(`Received chunk: ${chunk}`);
-            const chunkObj = JSON.parse(chunk.split("data: ")[1]);
+            const chunkObj = JSON.parse(chunk.toString().split("data: ")[1]);
             console.log(chunkObj);
             res.write(chunk);
         })
