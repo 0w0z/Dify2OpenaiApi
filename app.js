@@ -68,7 +68,14 @@ app.post('/v1/chat/completions', async (req, res) => {
             decompress: false
         });
         console.log('Start streaming...');
-        response.data.pipe(res);
+        response.on('data', (chunk) => {
+            console.log('Detected chunk...');
+            console.log(chunk);
+            res.write(chunk);
+        })
+        response.on('end', () => {
+            res.end();
+        })
     } catch (err) {
         console.log(err);
         return res.status(500).json({
