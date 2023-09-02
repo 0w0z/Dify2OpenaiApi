@@ -50,9 +50,25 @@ app.post('/v1/chat/completions', async (req, res) => {
         // 暂不支持连续对话 直接提取最后一句
         const data = req.body;
         const queryString = data.messages[data.messages.length-1].content;
-        const response = axios({
+        // const response = axios({
+        //     method: 'POST',
+        //     url: process.env.DIFY_API_URL + '/chat-messages',
+        //     headers: {
+        //         'Content-Type': 'application/json',
+        //         'Authorization': `Bearer ${authHeader.split(' ')[1]}`
+        //     },
+        //     data: {
+        //         'inputs': {},
+        //         'query': queryString,
+        //         'response_mode': 'streaming',
+        //         'conversation_id': '',
+        //         'user': 'apiuser'
+        //     },
+        //     responseType: 'stream',
+        //     decompress: false
+        // });
+        const response = await fetch(process.env.DIFY_API_URL + '/chat-messages', {
             method: 'POST',
-            url: process.env.DIFY_API_URL + '/chat-messages',
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${authHeader.split(' ')[1]}`
@@ -63,19 +79,10 @@ app.post('/v1/chat/completions', async (req, res) => {
                 'response_mode': 'streaming',
                 'conversation_id': '',
                 'user': 'apiuser'
-            },
-            responseType: 'stream',
-            decompress: false
+            }
         });
         console.log('Start streaming...');
-        response.on('data', (chunk) => {
-            console.log('Detected chunk...');
-            console.log(chunk);
-            res.write(chunk);
-        })
-        response.on('end', () => {
-            res.end();
-        })
+        response.body.pipeTo(res);
     } catch (err) {
         console.log(err);
         return res.status(500).json({
