@@ -84,6 +84,8 @@ app.post('/v1/chat/completions', async (req, res) => {
         });
         res.setHeader('Content-Type', 'text/event-stream');
         resp.body.pipe(res);
+        res.write('[DONE]');
+        res.end();
     } catch (err) {
         console.log(err);
         return res.status(500).json({
