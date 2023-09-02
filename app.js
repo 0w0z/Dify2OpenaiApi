@@ -82,7 +82,7 @@ app.post('/v1/chat/completions', async (req, res) => {
             }
         });
         console.log('Start streaming...');
-        response.body.pipeTo(res);
+        response.body.pipe(res);
     } catch (err) {
         console.log(err);
         return res.status(500).json({
