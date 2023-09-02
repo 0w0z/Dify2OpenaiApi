@@ -83,9 +83,22 @@ app.post('/v1/chat/completions', async (req, res) => {
             })
         });
         res.setHeader('Content-Type', 'text/event-stream');
-        resp.body.pipe(res);
-        res.write('[DONE]');
-        res.end();
+        /*
+           --- DOESN'T WORK ---
+           resp.body.pipe(res);
+           res.write('[DONE]');
+           res.end();
+           --------------------
+        */
+        const stream = resp.body;
+        stream.on('data', (chunk) => {
+            console.log(`Received chunk: ${chunk}`);
+            res.write(chunk);
+        })
+        stream.on('end', () => {
+            res.write('[DONE]');
+            res.end();
+        })
     } catch (err) {
         console.log(err);
         return res.status(500).json({
