@@ -82,7 +82,7 @@ app.post('/v1/chat/completions', async (req, res) => {
                 'user': 'apiuser'
             })
         });
-        return res.json({code: 0});
+        resp.body.pipe(res);
     } catch (err) {
         console.log(err);
         return res.status(500).json({
