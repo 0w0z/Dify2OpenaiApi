@@ -73,7 +73,7 @@ app.post('/v1/chat/completions', async (req, res) => {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${authHeader.split(' ')[1]}`
             },
-            data: {
+            body: {
                 'inputs': {},
                 'query': queryString,
                 'response_mode': 'streaming',
