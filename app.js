@@ -24,11 +24,11 @@ app.all('/*', (req, res, next) => {
 
 app.post('/v1/chat/completions', async (req, res) => {
     const authHeader = req.headers['authorization'] || req.headers['Authorization'];
-    const jsonFunc = res.json;
-    res.json = (d) => {
-        console.log(`[Return Json] ${JSON.stringify(d)}`);
-        jsonFunc(d);
-    }
+    // const jsonFunc = res.json;
+    // res.json = (d) => {
+    //     console.log(`[Return Json] ${JSON.stringify(d)}`);
+    //     jsonFunc(d);
+    // }
     if (!authHeader) {
         return res.status(401).json({
             code: 401,
@@ -82,7 +82,7 @@ app.post('/v1/chat/completions', async (req, res) => {
             }
         });
         console.log('Start streaming...');
-        response.body.pipe(res);
+        response.body.pipeTo(res);
     } catch (err) {
         console.log(err);
         return res.status(500).json({
