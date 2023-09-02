@@ -67,7 +67,7 @@ app.post('/v1/chat/completions', async (req, res) => {
         //     responseType: 'stream',
         //     decompress: false
         // });
-        fetch(process.env.DIFY_API_URL + '/chat-messages', {
+        const resp = await fetch(process.env.DIFY_API_URL + '/chat-messages', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -80,11 +80,8 @@ app.post('/v1/chat/completions', async (req, res) => {
                 'conversation_id': '',
                 'user': 'apiuser'
             }
-        })
-        .then((response) => response.body)
-        .then((data) => {
-            data.pipe(res);
-        })
+        });
+        return res.json({code: 0});
     } catch (err) {
         console.log(err);
         return res.status(500).json({
