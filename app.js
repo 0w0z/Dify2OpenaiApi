@@ -50,38 +50,38 @@ app.post('/v1/chat/completions', async (req, res) => {
         // 暂不支持连续对话 直接提取最后一句
         const data = req.body;
         const queryString = data.messages[data.messages.length-1].content;
-        const response = await axios({
-            method: 'POST',
-            url: process.env.DIFY_API_URL + '/chat-messages',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${authHeader.split(' ')[1]}`
-            },
-            data: {
-                'inputs': {},
-                'query': queryString,
-                'response_mode': 'streaming',
-                'conversation_id': '',
-                'user': 'apiuser'
-            },
-            responseType: 'stream',
-            decompress: false
-        });
-        console.log(response.data);
-        // const resp = await fetch(process.env.DIFY_API_URL + '/chat-messages', {
+        // const response = await axios({
         //     method: 'POST',
+        //     url: process.env.DIFY_API_URL + '/chat-messages',
         //     headers: {
         //         'Content-Type': 'application/json',
         //         'Authorization': `Bearer ${authHeader.split(' ')[1]}`
         //     },
-        //     body: {
+        //     data: {
         //         'inputs': {},
         //         'query': queryString,
         //         'response_mode': 'streaming',
         //         'conversation_id': '',
         //         'user': 'apiuser'
-        //     }
+        //     },
+        //     responseType: 'stream',
+        //     decompress: false
         // });
+        // console.log(response.data);
+        const resp = await fetch(process.env.DIFY_API_URL + '/chat-messages', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${authHeader.split(' ')[1]}`
+            },
+            body: JSON.stringify({
+                'inputs': {},
+                'query': queryString,
+                'response_mode': 'streaming',
+                'conversation_id': '',
+                'user': 'apiuser'
+            })
+        });
         return res.json({code: 0});
     } catch (err) {
         console.log(err);
