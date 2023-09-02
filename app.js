@@ -93,9 +93,29 @@ app.post('/v1/chat/completions', async (req, res) => {
         const stream = resp.body;
         stream.on('data', (chunk) => {
             console.log(`Received chunk: ${chunk}`);
-            const chunkObj = JSON.parse(chunk.toString().split("data: ")[1]);
-            console.log(chunkObj);
-            res.write(chunk);
+            const chunkObj = JSON.parse(chunk.toString().split("data: ")[1]); // use toString() !!!
+            if (chunkObj.event != 'message') {
+                console.log('Not a message, skip.');
+                return;
+            }
+            const chunkContent = chunkObj.answer;
+            const chunkId = chunkObj.conversation_id; 
+            const chunkCreate = chunkObj.created_at;
+            res.write("data: " + JSON.stringify({
+                "id": chunkId,
+                "object": "chat.completion.chunk",
+                "created": chunkCreate,
+                "model": data.model,
+                "choices": [
+                    {
+                        "index": 0,
+                        "delta": {
+                            "content": chunkContent
+                        },
+                        "finish_reason": null
+                    }
+                ]
+            }) + "\n\n");
         })
         stream.on('end', () => {
             console.log('end event detected...')
